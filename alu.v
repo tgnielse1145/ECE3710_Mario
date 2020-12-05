@@ -125,18 +125,21 @@ begin
 				Flags[0] = 1'b0;
 				Flags[3] = 1'b1;
 				Flags[1] = 1'b0;
+				$display("In compare, A: %d < B: %d", A, B);
 				end
 			else if ($signed(B) < $signed(A))
 				begin
 				Flags[0] = 1'b1;
 				Flags[3] = 1'b0;
 				Flags[1] = 1'b0;
+				$display("In compare, B: %d < A: %d", B, A);
 				end
 			else
 				begin
 				Flags[0] = 1'b0;
 				Flags[3] = 1'b0;
 				Flags[1] = 1'b1;
+				$display("In compare, A: %d == B: %d", A, B);
 				end
 			Flags[4] = 1'b0; Flags[2] = 1'b0;
 			C = B; // Subtraction without writeback is specified in the ISA.
