@@ -79,7 +79,6 @@ begin
 			if( (~A[15] & ~B[15] & C[15]) | (A[15] & B[15] & ~C[15]) ) Flags[2] = 1'b1; // Overflow Flag
 			else Flags[2] = 1'b0;
 			Flags[0] = 1'b0; Flags[4:3] = 2'b00;
-			$display("here in the alu in the add section and here is c %d \n ", C);
 		end
 
 	ADDU, ADDUI:
@@ -125,24 +124,21 @@ begin
 				Flags[0] = 1'b0;
 				Flags[3] = 1'b1;
 				Flags[1] = 1'b0;
-				$display("In compare, A: %d < B: %d", A, B);
 				end
 			else if ($signed(B) < $signed(A))
 				begin
 				Flags[0] = 1'b1;
 				Flags[3] = 1'b0;
 				Flags[1] = 1'b0;
-				$display("In compare, B: %d < A: %d", B, A);
 				end
 			else
 				begin
 				Flags[0] = 1'b0;
 				Flags[3] = 1'b0;
 				Flags[1] = 1'b1;
-				$display("In compare, A: %d == B: %d", A, B);
 				end
 			Flags[4] = 1'b0; Flags[2] = 1'b0;
-			C = B; // Subtraction without writeback is specified in the ISA.
+			C = A; // Subtraction without writeback is specified in the ISA.
 		end
 
 	CMPU, CMPUI:
@@ -166,7 +162,7 @@ begin
 				Flags[1] = 1'b1;
 				end
 			Flags[4] = 1'b0; Flags[2] = 1'b0;
-			C = B; // Subtraction without writeback is specified in the ISA.
+			C = A; // Subtraction without writeback is specified in the ISA.
 		end
 		
 	AND, ANDI:
