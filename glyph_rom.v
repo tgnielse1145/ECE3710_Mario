@@ -8,7 +8,7 @@
   *			512			|		x20 or x16
   *			 1k			|		x10 or x8
   *			 2k			|		 x5 or x4
-  *			 4kt			|			 x2
+  *			 4k			|			 x2
   *			 8k			|			 x1
   */
 module glyph_rom
@@ -24,14 +24,13 @@ reg [(DATA_WIDTH-1):0] rom [((2**ADDR_WIDTH)-1):0];
 
 initial
 begin
-	$readmemh("small_mario_glyphs.hex", rom);
-	$readmemh("Obstacle.hex", 
-			 rom, 2560);
+	$readmemh("bigMarioKart.hex", rom);
+	$readmemh("Obstacle.hex", rom, 1024);
+	//$readmemh("star.hex", rom, 2048);
+	//$readmemh("lightingBolt.hex", rom, 2516);
 end
 
 always @(posedge clk)begin
 	q <= rom[addr];
-	
-	
 end
 endmodule
