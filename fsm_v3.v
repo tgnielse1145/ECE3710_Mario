@@ -1,4 +1,4 @@
-module fsm_v3 (clock, reset, opcode, flags, pc_en, regfile_en, we_a, alu_mux, ls_ctrl, ir_en, flags_en, pc_mux, j_en);
+module fsm_v3 (clock, reset, opcode, flags, pc_en, regfile_en, we_a, alu_mux, ls_ctrl, ir_en, flags_en, pc_mux, j_en, button_mux, accel_mux);
 
 input clock, reset;
 input [15:0] opcode;
@@ -7,6 +7,8 @@ input [4:0] flags;
 reg [3:0] current_state, next_state;
 
 output reg pc_en, regfile_en, we_a, alu_mux, ls_ctrl, ir_en, flags_en, pc_mux, j_en;
+
+output button_mux, accel_mux;
 
 parameter [3:0]
  s0 = 4'b0000,
@@ -26,6 +28,9 @@ parameter [3:0]
  s14 = 4'b1110,
  s15 = 4'b1111;
 
+assign button_mux = (current_state == s9) ? 1'b1 : 1'b0;
+assign accel_mux = (current_state == s10) ? 1'b1 : 1'b0;
+
 always @(posedge clock, negedge reset) begin
 
 	if (reset == 0) current_state <= s15;
@@ -33,7 +38,7 @@ always @(posedge clock, negedge reset) begin
 
 end
 
-always @(current_state) begin
+always @(current_state, flags, opcode) begin
 	$display("State: %d, Flags: %b, Opcode: %h", current_state, flags, opcode);
 	case(current_state)
 		s0: next_state = s1;
@@ -42,6 +47,8 @@ always @(current_state) begin
 				8'b0100_0000: next_state = s4; // LOAD
 				8'b0100_0100: next_state = s3; // STORE
 				8'b0000_0000: next_state = s15; // WAIT
+				8'b0000_0100: next_state = s9; // STR BUTTON
+				8'b0000_1000: next_state = s10; // STR ACCEL
 				8'b1100_xxxx: begin // BRANCH
 					case(opcode[11:8])
 						// Flag[4] - Carry Flag - C
@@ -103,7 +110,8 @@ always @(current_state) begin
 		s6: next_state = s15;
 		s7: next_state = s15;
 		s8: next_state = s15;
-		//s9: next_state = s15;
+		s9: next_state = s15;
+		s10: next_state = s15;
 		s15: next_state = s0;
 		default: next_state = s15;
 	endcase
@@ -168,17 +176,6 @@ always @(current_state) begin
 			pc_mux = 0;
 			j_en = 0;
 			end
-//		s9: begin // STORE
-//			pc_en = 1;
-//			regfile_en = 0;
-//			we_a = 1;
-//			alu_mux = 0;
-//			ls_ctrl = 0;
-//			ir_en = 0;
-//			flags_en = 0;
-//			pc_mux = 0;
-//			j_en = 0;
-//     	end
 		s4: begin // LOAD PART 1
 			pc_en = 0;
 			regfile_en = 0;
@@ -234,17 +231,33 @@ always @(current_state) begin
 			pc_mux = 0;
 			j_en = 1;
 		end
-		
+		s9: begin // STORE BUTTON
+			pc_en = 1;
+			regfile_en = 1;
+			we_a = 0;
+			alu_mux = 0;
+			ls_ctrl = 0;
+			ir_en = 0;
+			flags_en = 0;
+			pc_mux = 0;
+			j_en = 0;
+		end
+		s10: begin // STORE ACCEL
+			pc_en = 1;
+			regfile_en = 1;
+			we_a = 0;
+			alu_mux = 0;
+			ls_ctrl = 0;
+			ir_en = 0;
+			flags_en = 0;
+			pc_mux = 0;
+			j_en = 0;
+		end
 	endcase
 	
 end
 
 endmodule
-
-
-
-
-
 
 
 

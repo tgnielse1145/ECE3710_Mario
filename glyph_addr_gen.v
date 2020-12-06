@@ -13,8 +13,11 @@ module glyph_addr_gen
 	output reg [23:0] bg_color,
 	output reg [23:0] grid_color,
 	output reg [23:0] track_color,
+	output reg [23:0] bound_color,
 	output reg pix_en
 );
+
+
 //localparam COUNT = 12500000;	// 500 sec
 ////localparam COUNT = 10;
 //localparam STATE_ITER = 3;
@@ -27,13 +30,14 @@ module glyph_addr_gen
 //	timer
 //);
 
-reg [23:0] printAddr;
 
 
-localparam BG_COLOR = 24'h0000FF;
+
+localparam BG_COLOR = 24'h98FB98;
                      
 localparam GRID_COLOR = 24'h228B22;
-localparam TRACK_COLOR = 24'h4682B4;
+localparam TRACK_COLOR = 24'h808069;
+localparam BOUND_COLOR = 24'hFFFFFF;
 
 
 // multiple fetches if multiple data needed
@@ -50,83 +54,9 @@ reg [7:0] PS, NS;
 //        y_end   = 480 = V_DISPLAY_INT
 wire [(LOG2_DISPLAY_WIDTH-1):0] x_pos;
 wire [(LOG2_DISPLAY_HEIGHT-1):0] y_pos;
-wire [(LOG2_DISPLAY_WIDTH-1):0] x_pos1;
-wire [(LOG2_DISPLAY_HEIGHT-1):0] y_pos1;
 assign x_pos = hcount - 10'd158;
 assign y_pos = vcount;
-assign x_pos1= x_pos;
-assign y_pos1= y_pos;
-wire [(LOG2_DISPLAY_WIDTH-1):0] backGroundx_pos1;
-wire [(LOG2_DISPLAY_WIDTH-1):0] backGroundx_pos2;
-wire [(LOG2_DISPLAY_WIDTH-1):0] backGroundx_pos3;
-wire [(LOG2_DISPLAY_WIDTH-1):0] backGroundx_pos4;
-wire [(LOG2_DISPLAY_WIDTH-1):0] backGroundx_pos5;
-wire [(LOG2_DISPLAY_WIDTH-1):0] backGroundx_pos6;
-wire [(LOG2_DISPLAY_WIDTH-1):0] backGroundx_pos7;
-wire [(LOG2_DISPLAY_WIDTH-1):0] backGroundx_pos8;
-wire [(LOG2_DISPLAY_WIDTH-1):0] backGroundx_pos9;
-wire [(LOG2_DISPLAY_WIDTH-1):0] backGroundx_pos10;
-wire [(LOG2_DISPLAY_WIDTH-1):0] backGroundx_pos11;
-wire [(LOG2_DISPLAY_WIDTH-1):0] backGroundx_pos12;
-wire [(LOG2_DISPLAY_WIDTH-1):0] backGroundx_pos13;
-wire [(LOG2_DISPLAY_WIDTH-1):0] backGroundx_pos14;
-wire [(LOG2_DISPLAY_WIDTH-1):0] backGroundx_pos15;
-wire [(LOG2_DISPLAY_WIDTH-1):0] backGroundx_pos16;
-wire [(LOG2_DISPLAY_WIDTH-1):0] backGroundx_pos17;
-wire [(LOG2_DISPLAY_WIDTH-1):0] backGroundx_pos18;
-wire [(LOG2_DISPLAY_WIDTH-1):0] backGroundx_pos19;
-wire [(LOG2_DISPLAY_WIDTH-1):0] backGroundx_pos20;
-//wire [(LOG2_DISPLAY_HEIGHT-1):0] y_pos;
-wire [(LOG2_DISPLAY_HEIGHT-1):0] backGroundy_pos1;
-wire [(LOG2_DISPLAY_HEIGHT-1):0] backGroundy_pos2;
-wire [(LOG2_DISPLAY_HEIGHT-1):0] backGroundy_pos3;
-wire [(LOG2_DISPLAY_HEIGHT-1):0] backGroundy_pos4;
-wire [(LOG2_DISPLAY_HEIGHT-1):0] backGroundy_pos5;
-wire [(LOG2_DISPLAY_HEIGHT-1):0] backGroundy_pos6;
-wire [(LOG2_DISPLAY_HEIGHT-1):0] backGroundy_pos7;
-wire [(LOG2_DISPLAY_HEIGHT-1):0] backGroundy_pos8;
-wire [(LOG2_DISPLAY_HEIGHT-1):0] backGroundy_pos9;
-wire [(LOG2_DISPLAY_HEIGHT-1):0] backGroundy_pos10;
-wire [(LOG2_DISPLAY_HEIGHT-1):0] backGroundy_pos11;
-wire [(LOG2_DISPLAY_HEIGHT-1):0] backGroundy_pos12;
-wire [(LOG2_DISPLAY_HEIGHT-1):0] backGroundy_pos13;
-wire [(LOG2_DISPLAY_HEIGHT-1):0] backGroundy_pos14;
-wire [(LOG2_DISPLAY_HEIGHT-1):0] backGroundy_pos15;
-assign backGroundx_pos1=32;
-assign backGroundx_pos2=64;
-assign backGroundx_pos3=96;
-assign backGroundx_pos4=128;
-assign backGroundx_pos5=160;
-assign backGroundx_pos6=192;
-assign backGroundx_pos7=224;
-assign backGroundx_pos8=256;
-assign backGroundx_pos9=288;
-assign backGroundx_pos10=320;
-assign backGroundx_pos11=352;
-assign backGroundx_pos12=384;
-assign backGroundx_pos13=416;
-assign backGroundx_pos14=448;
-assign backGroundx_pos15=480;
-assign backGroundx_pos16=512;
-assign backGroundx_pos17=544;
-assign backGroundx_pos18=576;
-assign backGroundx_pos19=608;
-assign backGroundx_pos20=640;
-assign backGroundy_pos1=32;
-assign backGroundy_pos2=64;
-assign backGroundy_pos3=96;
-assign backGroundy_pos4=128;
-assign backGroundy_pos5=160;
-assign backGroundy_pos6=192;
-assign backGroundy_pos7=224;
-assign backGroundy_pos8=256;
-assign backGroundy_pos9=288;
-assign backGroundy_pos10=320;
-assign backGroundy_pos11=352;
-assign backGroundy_pos12=384;
-assign backGroundy_pos13=416;
-assign backGroundy_pos14=448;
-assign backGroundy_pos15=480;
+
 
 // store values fetched to process and use through framerate
 reg mario_x_en, mario_y_en, mario_m_en, obstacle_x_en, obstacle_y_en, obstacle_m_en;
@@ -150,13 +80,13 @@ assign mario_y_off = y_pos - mario_y_pos;
 assign obstacle_x_off = x_pos - obstacle_x_pos;
 assign obstacle_y_off = y_pos - obstacle_y_pos;
 
-localparam MARIO_GLYPH_WIDTH = 16;
-localparam MARIO_GLYPH_HEIGHT = 20;
-localparam MARIO_GLYPH_SIZE = 320;	// MARIO_GLYPH_WIDTH * MARIO_GLYPH_HEIGHT
+localparam MARIO_GLYPH_WIDTH = 32;
+localparam MARIO_GLYPH_HEIGHT = 32;
+localparam MARIO_GLYPH_SIZE = 1024;	// MARIO_GLYPH_WIDTH * MARIO_GLYPH_HEIGHT
 localparam OBSTACLE_GLYPH_WIDTH = 32;
 localparam OBSTACLE_GLYPH_HEIGHT = 32;
 localparam OBSTACLE_GLYPH_SIZE = 1024;
-localparam OBSTACLE_OFFSET = 2560;
+localparam OBSTACLE_OFFSET = 1024;
 
 always @(posedge clk) begin
 	if (reset) PS <= FETCH0;
@@ -177,11 +107,10 @@ always @* begin
 	obstacle_m_en = 0;
 	pix_en = 0;
 	bg_color = BG_COLOR;
-	printAddr= 0;
-	//track_color = TRACK_COLOR;
-	//grid_color= GRID_COLOR;
-	$display("here is sys_data %d \n ", sys_data);
-	$display ("here is printAddr= %h\n", printAddr);
+	track_color = TRACK_COLOR;
+	grid_color= GRID_COLOR;
+	bound_color = BOUND_COLOR;
+	
 	case (PS)
 	
 		// fetch memory needed ( try and store in as few memory locations possible )
@@ -213,22 +142,21 @@ always @* begin
 		FETCH3: begin
 			mario_m_en = 1'b1;
 			sys_addr = 'h0053;
-			//NS = FETCH_PIXEL;
 			NS = FETCH4;
 		end
 		FETCH4: begin
 			obstacle_x_en = 1'b1;
-			sys_addr = 'h0054; //fetch object x position
+			sys_addr = 'h0054; //save object x position
 			NS = FETCH5;
 		end
 		FETCH5: begin
 			obstacle_y_en = 1'b1;
-			sys_addr = 'h0055; //fetch object y position
+			sys_addr = 'h0055; //save object y position
 			NS = FETCH6;
 		end
 		FETCH6: begin
 			obstacle_m_en = 1'b1;
-			sys_addr = 'h0056; //fetch object x position
+			sys_addr = 'h0056; //save object movement position
 			NS = FETCH_PIXEL;
 		end
 
@@ -240,8 +168,7 @@ always @* begin
 				 x_pos < (mario_x_pos + MARIO_GLYPH_WIDTH) &&
 				 y_pos >= mario_y_pos && 
 				 y_pos < (mario_y_pos + MARIO_GLYPH_HEIGHT)) begin
-				glyph_addr = (mario_m_pos * MARIO_GLYPH_SIZE) + 	// base address
-								 (mario_y_off * MARIO_GLYPH_WIDTH) +	// y-offset
+				glyph_addr = (mario_y_off * MARIO_GLYPH_WIDTH) +	// y-offset
 								  mario_x_off;									// x-offset
 				pix_en = 1'b1;
 			end
@@ -254,513 +181,7 @@ always @* begin
 								  obstacle_x_off;									// x-offset
 				pix_en = 1'b1;
 			end
-
-else if (x_pos >=0 && x_pos < backGroundx_pos1 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos1))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ printAddr;//( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;	
-						printAddr= printAddr +'h0001;
-			         //printAddr = OBSTACLE_OFFSET+ (((x_pos * OBSTACLE_GLYPH_HEIGHT) + (y_pos * OBSTACLE_GLYPH_WIDTH))/32);
-			       $display("here is print_addr %d \n ", printAddr );			
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos2 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos1))
-						begin										
-						glyph_addr =OBSTACLE_OFFSET+ printAddr; 
-						printAddr= printAddr +'h0001;
-						//printAddr= printAddr +'h0001;(((x_pos * OBSTACLE_GLYPH_HEIGHT) + (y_pos * OBSTACLE_GLYPH_WIDTH))/32);// OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos3 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos1))
-						begin										
-						glyph_addr =OBSTACLE_OFFSET+printAddr;//	(((x_pos * OBSTACLE_GLYPH_HEIGHT) + (y_pos * OBSTACLE_GLYPH_WIDTH))/32);// OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						printAddr= printAddr +'h0001;
-						pix_en = 1'b1;				
-						end	
-
-else if (x_pos >0 && x_pos < backGroundx_pos4 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos1))
-						begin										
-						glyph_addr =OBSTACLE_OFFSET+printAddr;// (((x_pos * OBSTACLE_GLYPH_HEIGHT) + (y_pos * OBSTACLE_GLYPH_WIDTH))/32);// OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						printAddr= printAddr +'h0001;
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos5 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos1))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ printAddr;// (((x_pos * OBSTACLE_GLYPH_HEIGHT) + (y_pos * OBSTACLE_GLYPH_WIDTH))/32);//OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						printAddr= printAddr +'h0001;
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos6 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos1))
-						begin										
-						glyph_addr =OBSTACLE_OFFSET+ printAddr;//(((x_pos * OBSTACLE_GLYPH_HEIGHT) + (y_pos * OBSTACLE_GLYPH_WIDTH))/32);// OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						printAddr= printAddr +'h0001;
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos7 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos1))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+printAddr;// (((x_pos * OBSTACLE_GLYPH_HEIGHT) + (y_pos * OBSTACLE_GLYPH_WIDTH))/32);//OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						printAddr= printAddr +'h0001;
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos8 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos1))
-						begin										
-						glyph_addr =OBSTACLE_OFFSET+ (((x_pos * OBSTACLE_GLYPH_HEIGHT) + (y_pos * OBSTACLE_GLYPH_WIDTH))/32);// OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos9 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos1))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ (((x_pos * OBSTACLE_GLYPH_HEIGHT) + (y_pos * OBSTACLE_GLYPH_WIDTH))/32);//OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos10 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos1))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ (((x_pos * OBSTACLE_GLYPH_HEIGHT) + (y_pos * OBSTACLE_GLYPH_WIDTH))/32);//OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-
-else if (x_pos >0 && x_pos < backGroundx_pos11 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos1))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ (((x_pos * OBSTACLE_GLYPH_HEIGHT) + (y_pos * OBSTACLE_GLYPH_WIDTH))/32);//OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos12 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos1))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos13 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos1))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos14 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos1))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos15 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos1))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos16 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos1))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos17 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos1))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-
-else if (x_pos >0 && x_pos < backGroundx_pos18 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos1))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos19 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos1))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos20 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos1))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos1 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos2))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos2 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos2))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos3 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos2))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-
-else if (x_pos >0 && x_pos < backGroundx_pos4 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos2))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos5 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos2))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos6 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos2))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos7 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos2))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos8 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos2))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos9 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos2))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos10 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos2))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-
-else if (x_pos >0 && x_pos < backGroundx_pos11 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos2))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos12 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos2))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos13 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos2))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos14 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos2))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos15 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos2))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos16 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos2))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos17 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos2))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-
-else if (x_pos >0 && x_pos < backGroundx_pos18 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos2))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos19 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos2))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos20 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos2))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-
-else if (x_pos >0 && x_pos < backGroundx_pos1 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos15))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos2 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos15))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos3 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos15))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-
-else if (x_pos >0 && x_pos < backGroundx_pos4 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos15))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos5 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos15))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos6 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos15))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos7 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos15))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos8 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos15))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos9 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos15))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos10 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos15))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-
-else if (x_pos >0 && x_pos < backGroundx_pos11 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos15))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos12 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos15))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos13 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos15))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos14 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos15))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos15 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos15))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos16 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos15))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos17 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos15))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-
-else if (x_pos >0 && x_pos < backGroundx_pos18 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos15))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos19 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos15))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos20 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos15))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-
-							else if (x_pos >0 && x_pos < backGroundx_pos1 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos9))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos2 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos9))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos3 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos9))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-
-else if (x_pos >0 && x_pos < backGroundx_pos4 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos9))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos5 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos9))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos6 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos9))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos7 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos9))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos8 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos9))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos9 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos9))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos10 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos9))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-
-else if (x_pos >0 && x_pos < backGroundx_pos11 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos9))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos12 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos9))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos13 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos9))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos14 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos9))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos15 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos9))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos16 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos9))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos17 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos9))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-
-else if (x_pos >0 && x_pos < backGroundx_pos18 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos9))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos19 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos9))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-else if (x_pos >0 && x_pos < backGroundx_pos20 &&
-						y_pos >= 0 && y_pos < (backGroundy_pos9))
-						begin										
-						glyph_addr = OBSTACLE_OFFSET+ ( OBSTACLE_GLYPH_SIZE) + (y_pos * OBSTACLE_GLYPH_WIDTH) +(x_pos);					
-						pix_en = 1'b1;				
-						end	
-
-						NS = FETCH_PIXEL;
+			NS = FETCH_PIXEL;
 		end
 	
 	endcase 

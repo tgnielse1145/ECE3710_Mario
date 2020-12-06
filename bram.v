@@ -30,8 +30,8 @@ module bram
 		// Assuming data memory starts at 16'h1000
 		$readmemh("opcodes.hex", ram);
 		$readmemh("data.hex", ram, 80);
-		$readmemh("udest.hex", ram, 500);
-		$readmemh("irtest.hex", ram, 600);
+		//$readmemh("udest.hex", ram, 500);
+		//$readmemh("irtest.hex", ram, 600);
 	
 	end
 
