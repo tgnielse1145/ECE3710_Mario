@@ -12,23 +12,20 @@ ADDI r8 1
 ADDUI r9 255        
 ADDUI r10 255       
 LSHI r10 8
-ADDI r5 15          
+ADDUI r6 100        
+ADDI r5 18          
+STRUD r14 r0
+STRLR r15 r0
 BNE r14 r7 2        
 SUBI r4 2
 BNE r14 r8 2
 ADDI r4 2
-ADDUI r2 128        
-LSHI r2 1
-ADDUI r2 44
-ADDUI r6 128        
-LSHI r6 2
-ADDUI r6 138
-BLT r3 r2 7      
-BGT r3 r6 6         
 BLT r15 r9 2
 ADDI r3 2
 BGT r15 r10 2
-SUBI r3 2
+SUBI r3 2   
+BLE r3 r6 2         
+ADDI r3 2
 STORE r3 r0         
 STORE r4 r1         
 ADDI r13 1          
