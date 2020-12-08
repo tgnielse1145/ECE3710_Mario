@@ -53,14 +53,7 @@ always @(posedge clk)
 	pix_en_out <= pix_en;
 	
 defparam bitgen.DATA_WIDTH = GLYPH_DATA_WIDTH;
-Pixel_On_Text2 #(.displayText("Pixel_On_Text2 -- test1 at (200,200)")) t1(
-                vga_clk,
-                200, // text position.x (top left)
-                200, // text position.y (top left)
-                hcount, // current position.x
-                vcount, // current position.y
-                res  // result, 1 if current pixel is on text, 0 otherwise
-            );
+
 
 bitgen bitgen (
 	vga_blank_n, pix_en_out,	// inputs  (1-bit)
@@ -68,7 +61,7 @@ bitgen bitgen (
 	bg_color, 						// inputs  (24-bit)
 	grid_color, 					// inputs  (24-bit)
 	track_color,					// inputs  (24-bit)
-	bound_color,					// inputs  (24-bit)
+	bound_color,            	// inputs  (24-bit)
 	hcount, vcount,				// inputs (10-bit)
 	{r,g,b}							// outputs (24-bit)
 );
