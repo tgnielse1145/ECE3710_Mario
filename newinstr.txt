@@ -1,36 +1,48 @@
-ADDI r0 80          
-ADDI r1 81          
-ADDI r12 84         
-ADDI r11 255        
+ADDI r0 80          //x pos mario (address)
+ADDI r1 81          //y pos mario (address)
+ADDI r12 84         //y pos obstacle (address)
+ADDI r11 255        //counter limit variable
 LSHI r11 4
 ADDI r11 15
-LOAD r3 r0          
-LOAD r4 r1          
-LOAD r13 r12        
-ADDI r7 2           
-ADDI r8 1           
-ADDUI r9 255        
-ADDUI r10 255       
+LOAD r3 r0          //x pos mario (value)
+LOAD r4 r1          //y pos mario (value)
+LOAD r13 r12        //y pos obstacle (value)
+ADDI r7 2           //up button pressed
+ADDI r8 1           //down button pressed
+ADDUI r9 255        //right
+ADDUI r10 255       //left
 LSHI r10 8
-ADDUI r6 100        
-ADDI r5 18          
+ADDI r5 15          //begin game loop
 STRUD r14 r0
 STRLR r15 r0
-BNE r14 r7 2        
+BNE r14 r7 5        //check if up button pressed
+SUB r6 r6
+BLE r4 r6 2         //don't move if at the top
 SUBI r4 2
-BNE r14 r8 2
+BNE r14 r8 8        //check if down is pressed
+SUB r6 r6
+ADDUI r6 128
+LSHI r6 1
+ADDUI r6 194
+BGE r4 r6 2         //dont move if at the bottom
 ADDI r4 2
-BLT r15 r9 2
+BLT r15 r9 8        //check if right is pressed
+SUB r6 r6
+ADDUI r6 128
+LSHI r6 1
+ADDUI r6 204
+BGE r3 r6 2         //don't move past right lane
 ADDI r3 2
-BGT r15 r10 2
+BGT r15 r10 6       //check if left is pressed
+SUB r6 r6
+ADDUI r6 140
+BLE r3 r6 2         //check if less than left lane
 SUBI r3 2   
-BLE r3 r6 2         
-ADDI r3 2
-STORE r3 r0         
-STORE r4 r1         
-ADDI r13 1          
-STORE r13 r12       
-SUB r2 r2           
+STORE r3 r0         //store x pos mario
+STORE r4 r1         //store y pos mario
+ADDI r13 1          //move obstacle down
+STORE r13 r12       //store y pos obstacle
+SUB r2 r2           //everything down to the jump is clock divider
 ADDI r2 1
 BNE r2 r11 254
 SUB r2 r2
@@ -42,4 +54,4 @@ BNE r2 r11 254
 SUB r2 r2
 ADDI r2 1
 BNE r2 r11 254
-JUC r5              
+JUC r5              //jump to beginning of game loop
