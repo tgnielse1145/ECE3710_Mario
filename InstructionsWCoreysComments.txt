@@ -1,0 +1,67 @@
+// Setup
+ADDI r0 h50 // Mario x mem loc
+ADDI r1 h51 // Mario y mem loc
+ADDI r12 h54 // Obstacle y mem loc
+ADDI r11 hFF // Counter limit variable
+LSHI r11 4
+ADDI r11 h0F // Final value 0FFF, max for twos
+// complement would be 7FFF, would be addi 7F, left
+// shift 8, then addi FF
+// come to think of it, you may not need to stay within
+// the confines of 2's complement and use FFFF, because BNE isn't
+// looking at less than or greater than, just not equal
+
+LOAD r3 r0 // Mario x loc
+LOAD r4 r1 // Mario y loc
+LOAD r13 r12 // Obstacle y loc
+ADDI r7 2 // Value signifying up button pressed
+ADDI r8 1 // Value signifying down button pressed
+ADDI r9 256 // Value signifying right button pressed
+ADDI r10 256 // Value signifying left button pressed (bit shifted)
+LSHI r10 8
+ADDI r5 15 // Beginning of game loop location
+// Begin input Loop
+STR UD // if you type STRUD r14 r0 and use assembler2 it should print e40
+STR LR // if you type STRLR r15 r0 and use assembler2 it should print f80
+// If Up button not pressed, skip upward movement
+BNE r14 r7 2
+SUBI r4 2*
+// If Down button not pressed, skip downward movement
+BNE r14 r8 2
+ADDI r4 2*
+// If Right button not pressed, skip right movement
+BLT r15 r9 2
+ADDI r3 2*
+// If Left button not pressed, skip left movement
+BGT r15 r10 2
+SUBI r3 2*
+STORE r3 r0
+STORE r4 r1
+
+// Obstacle going accross screen
+ADDI r13 1
+STORE r13 r12
+
+// To increase the clock delay (slowing down game loop) either //repeat the sub/addi/bne instructions below or increase the value
+// in r11
+
+// Slow down the game clock by about 16000 instructions
+SUB r2 r2 // Clear counter variable - set it to zero
+ADDI r2 1 // Increment counter
+BNE r2 r11 -2 // If r2 hasn't reached value in r11,
+// then go back 2 instructions to keep incrementing (2 because bne is a
+// psuedo-instruction)
+
+// These next lines just repeat the counter 3 more
+// times, to give 4x the delay
+SUB r2 r2
+ADDI r2 1
+BNE r2 r11 -2
+SUB r2 r2
+ADDI r2 1
+BNE r2 r11 -2
+SUB r2 r2
+ADDI r2 1
+BNE r2 r11 -2
+
+JUC r5 // Unconditional jump to beginning of game loop
