@@ -25,8 +25,10 @@ reg [(DATA_WIDTH-1):0] rom [((2**ADDR_WIDTH)-1):0];
 initial
 begin
 	$readmemh("bigMarioKart.hex", rom);
-	$readmemh("Obstacle.hex", rom, 1024);
-	//$readmemh("star.hex", rom, 2048);
+	$readmemh("greenShell.hex", rom, 3072);	
+	$readmemh("redShell.hex", rom, 3396);
+	
+	
 	//$readmemh("lightingBolt.hex", rom, 2516);
 end
 
