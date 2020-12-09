@@ -120,43 +120,43 @@ always @* begin
 		
 		// fetch mario x-position
 		FETCH0: begin
-			sys_addr = 'h0050;
+			sys_addr = 'hc8;
 			NS = FETCH1;
 		end
 		
 		// save mario x-position and fetch mario y-position
 		FETCH1: begin
 			mario_x_en = 1'b1;
-			sys_addr = 'h0051;
+			sys_addr = 'hc9;
 			NS = FETCH2;
 		end
 		
 		// save mario y-position and fetch mario movement position (which mario glyph)
 		FETCH2: begin
 			mario_y_en = 1'b1;
-			sys_addr = 'h0052;
+			sys_addr = 'hca;
 			NS = FETCH3;
 		end
 		
 		// save mario m-position
 		FETCH3: begin
 			mario_m_en = 1'b1;
-			sys_addr = 'h0053;
+			sys_addr = 'hcb;
 			NS = FETCH4;
 		end
 		FETCH4: begin
 			obstacle_x_en = 1'b1;
-			sys_addr = 'h0054; //save object x position
+			sys_addr = 'hcc; //save object x position
 			NS = FETCH5;
 		end
 		FETCH5: begin
 			obstacle_y_en = 1'b1;
-			sys_addr = 'h0055; //save object y position
+			sys_addr = 'hcd; //save object y position
 			NS = FETCH6;
 		end
 		FETCH6: begin
 			obstacle_m_en = 1'b1;
-			sys_addr = 'h0056; //save object movement position
+			sys_addr = 'hce; //save object movement position
 			NS = FETCH_PIXEL;
 		end
 
