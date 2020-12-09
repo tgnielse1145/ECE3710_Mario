@@ -40,7 +40,13 @@ BLE r3 r6 2         //check if less than left lane
 SUBI r3 2   
 STORE r3 r0         //store x pos mario
 STORE r4 r1         //store y pos mario
+SUB r6 r6
+ADDUI r6 128
+LSHI r6 1
+ADDUI r6 225
 ADDI r13 1          //move obstacle down
+BLT r13 r6 2
+SUB r13 r13
 STORE r13 r12       //store y pos obstacle
 SUB r2 r2           //everything down to the jump is clock divider
 ADDI r2 1
@@ -55,3 +61,7 @@ SUB r2 r2
 ADDI r2 1
 BNE r2 r11 254
 JUC r5              //jump to beginning of game loop
+// Exit loop
+// freeze mario and shell for a couple seconds
+// reset registers and positions to match data file
+// jump to beginning of program
