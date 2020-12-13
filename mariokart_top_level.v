@@ -2,7 +2,8 @@ module mariokart_top_level (
 
 input clock, reset, up_button, down_button, left_button, right_button,
 output vga_clk, vga_blank_n, vga_vs, vga_hs,
-output [7:0] r, g, b
+output [7:0] r, g, b,
+output [0:6] sev_seg
 
 );
 
@@ -14,6 +15,7 @@ wire [15:0] alu_bus;
 wire [4:0] flags;
 wire [15:0] addr,  a_in, b_in, opcode, button_in, accel_in;
 wire ls_ctrl, flags_en, regfile_en, alu_mux, pc_en, ir_en, pc_mux, j_en, button_mux, accel_mux;
+wire [3:0] lives;
 
 assign button_in[15:2] = 14'd0;
 assign button_in[1] = ~up_button;
@@ -67,7 +69,8 @@ bram ram (
 	.we_b(we_b),
 	.clk(clock),	
 	.q_a(q_a),
-	.q_b(q_b)				
+	.q_b(q_b),
+	.lives(lives)
 );
 
 program_counter pc1(
@@ -128,4 +131,8 @@ fsm_v3 decoder(
 	.accel_mux(accel_mux)
 );
 
+bcd_to_sev_seg sev_seg_display(
+	.bcd(lives),
+	.seven_seg(sev_seg)
+);
 endmodule

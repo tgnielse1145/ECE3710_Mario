@@ -1,6 +1,14 @@
-012C
-0190
-0000
-012C
-FC18
-0000
+012C // mario x pos       'hc8  200
+0190 // mario y pos       'hc9  201
+0000 // mario m_en        'hca  202
+012c // greenShell x_pos  'hcb  203
+FC18 // greenShell y_pos  'hcc  204
+0000 // greenShell m_en   'hcd  205
+0120 // redShell x_pos    'hce  206
+0010 // redShell y_pos    'hcf  207
+0000 // redShell m_en     'hd0  208
+0129 // bowser x pos      'hd1  209
+0180 // bowser y pos      'hd2  210
+0000 // bowser m_en       'hd3  211
+0000 // nothing           'hd4  212
+0003 // lives              213 

@@ -243,15 +243,15 @@ always @* begin
 								  redShell_x_off;									// x-offset
 				pix_en = 1'b1;
 			end
-			else if (x_pos >= bowser_x_pos &&
-				 x_pos < (bowser_x_pos + BOWSER_GLYPH_WIDTH) &&
-				 y_pos >= bowser_y_pos && 
-				 y_pos < (bowser_y_pos + BOWSER_GLYPH_HEIGHT)) begin
-				glyph_addr = BOWSER_OFFSET+ (bowser_m_pos * BOWSER_GLYPH_SIZE) + 	// base address
-								 (bowser_y_off * BOWSER_GLYPH_WIDTH) +	// y-offset
-								  bowser_x_off;									// x-offset
-				pix_en = 1'b1;
-			end
+			//else if (x_pos >= bowser_x_pos &&
+			//	 x_pos < (bowser_x_pos + BOWSER_GLYPH_WIDTH) &&
+			//	 y_pos >= bowser_y_pos && 
+			//	 y_pos < (bowser_y_pos + BOWSER_GLYPH_HEIGHT)) begin
+			//	glyph_addr = BOWSER_OFFSET+ (bowser_m_pos * BOWSER_GLYPH_SIZE) + 	// base address
+			//					 (bowser_y_off * BOWSER_GLYPH_WIDTH) +	// y-offset
+			//					  bowser_x_off;									// x-offset
+			//	pix_en = 1'b1;
+			//end
 			
 			$display("here is greenShell_x_pos %h \n", greenShell_x_pos);
 			$display("here is greenShell_y_pos %h \n", greenShell_y_pos);
@@ -262,9 +262,9 @@ always @* begin
 			$display("here is redShell_m_pos %h \n", redShell_m_pos);
 			
 			
-			$display("here is bowser_x_pos %h \n", bowser_x_pos);
-			$display("here is bowser_y_pos %h \n", bowser_y_pos);
-			$display("here is bowser_m_pos %h \n", bowser_m_pos);
+			//$display("here is bowser_x_pos %h \n", bowser_x_pos);
+			//$display("here is bowser_y_pos %h \n", bowser_y_pos);
+			//$display("here is bowser_m_pos %h \n", bowser_m_pos);
 
 
 			

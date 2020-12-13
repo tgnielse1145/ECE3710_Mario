@@ -19,7 +19,8 @@ module bram
 	input [(DATA_WIDTH-1):0] data_a, data_b,
 	input [(ADDR_WIDTH-1):0] addr_a, addr_b,
 	input we_a, we_b, clk,
-	output reg [(DATA_WIDTH-1):0] q_a, q_b
+	output reg [(DATA_WIDTH-1):0] q_a, q_b,
+	output reg[3:0] lives
 );
 
 	// Declare the RAM variable
@@ -32,9 +33,13 @@ module bram
 		$readmemh("data.hex", ram, 16'hc8);
 		//$readmemh("udest.hex", ram, 500);
 		//$readmemh("irtest.hex", ram, 600);
-	
 	end
-
+	always @(posedge clk)
+	begin
+		if(addr_a == 16'hd5) lives = data_a;
+		else if(addr_b == 16'hd5) lives = data_b;
+	end
+	
 	// Port A 
 	always @ (posedge clk)
 	begin
