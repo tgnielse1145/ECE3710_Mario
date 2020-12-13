@@ -9,6 +9,7 @@ module vga
 	output [(SYS_ADDR_WIDTH-1):0] sys_addr
 );
 
+
 // size of registers log2(800) ~ 10
 //							log2(525) ~ 10
 localparam LOG2_DISPLAY_WIDTH  = 10;
@@ -53,8 +54,28 @@ always @(posedge clk)
 	pix_en_out <= pix_en;
 	
 defparam bitgen.DATA_WIDTH = GLYPH_DATA_WIDTH;
+//Pixel_On_Text2 #(.displayText("Pixel_On_Text2 -- test1 at (200,200)")) t1(
+//                vga_clk,
+//                200, // text position.x (top left)
+//                200, // text position.y (top left)
+//                hcount, // current position.x
+//                vcount, // current position.y
+//                res  // result, 1 if current pixel is on text, 0 otherwise
+//            );
+localparam COUNT = 12500000;	// 500 sec
+//localparam COUNT = 10;
+localparam STATE_ITER = 3;
+wire timer;
+wire [31:0]counter;
 
-
+// clk divider
+pulse clk_div (
+	clk, reset,
+	STATE_ITER,
+	COUNT,
+	timer,
+	counter
+);
 bitgen bitgen (
 	vga_blank_n, pix_en_out,	// inputs  (1-bit)
 	pixel, 							// inputs  (GLYPH_DATA_WIDTH-bit)
@@ -62,8 +83,10 @@ bitgen bitgen (
 	grid_color, 					// inputs  (24-bit)
 	track_color,					// inputs  (24-bit)
 	bound_color,            	// inputs  (24-bit)
-	hcount, vcount,				// inputs (10-bit)
-	{r,g,b}							// outputs (24-bit)
+	hcount, vcount,          	// inputs (10-bit)
+	counter,
+	{r,g,b}	// outputs (24-bit)
+	
 );
 
 
@@ -82,15 +105,14 @@ glyph_addr_gen addr_gen (
 	clk, reset, vga_blank_n, vga_vs, vga_hs,	// inputs (1-bit)
 	hcount, 												// inputs (LOG2_DISPLAY_WIDTH-bit)
 	vcount,												// inputs (LOG2_DISPLAY_HEIGHT-bit)
-	sys_data,											// outputs (SYS_DATA_WIDTH-bit)
+	sys_data,										// outputs (SYS_DATA_WIDTH-bit)
 	glyph_addr,											// outputs (GLYPH_ADDR_WIDTH-bit)
-	sys_addr,											// outputs (SYS_ADDR_WIDTH-bit)
-	
+	sys_addr,											// outputs (SYS_ADDR_WIDTH-bit)	
 	bg_color,											// outputs (24-bit)
 	grid_color,											// outputs (24-bit)
    track_color,										// outputs (24-bit)
 	bound_color,										// outputs (24-bit)
-	pix_en												// outputs (1-bit)
+	pix_en                                  	// outputs (1-bit)
 );
 
 /***************************************************************************/
@@ -105,5 +127,6 @@ glyph_rom glyphs (
 	clk, 					// inputs  (1-bit)
 	pixel				// outputs (GLYPH_DATA_WIDTH-bit)	
 );
+
 
 endmodule
